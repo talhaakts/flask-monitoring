@@ -1,42 +1,40 @@
 pipeline {
     agent any
+
     stages {
-        stage('git cloning') {
+        stage('Git Cloning') {
             steps {
                 echo 'Cloning git repo'
                 git url: 'https://github.com/hakanbayraktar/flask-monitoring.git', credentialsId: 'jenkins-github', branch: 'main'
-
             }
         }
-        stage('build') {
+        stage('Build Docker Image') {
             steps {
                 echo 'Building the image'
                 sh 'docker build -t flask-monitoring .'
             }
         }
-        stage('dockerhub') {
+        stage('Push to Docker Hub') {
             steps {
-                echo 'pushing to Docker Hub'
-                withCredentials([usernamePassword(credentialsId: "dockerhub-cred", usernameVariable: "USER", passwordVariable: "PASS")]) {
+                echo 'Pushing to Docker Hub'
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                     sh '''
-                    echo "$PASS" | docker login --username "$USER" --password-stdin
-                    docker tag flask-monitoring "$USER"/flask-monitoring:latest
-                    docker push "$USER"/flask-monitoring:latest
+                    echo "${PASS}" | docker login --username "${USER}" --password-stdin
+                    docker tag flask-monitoring ${USER}/flask-monitoring:latest
+                    docker push ${USER}/flask-monitoring:latest
                     '''
                 }
             }
         }
-
-
-
-
-        stage('kubernetes deploy') {
+        stage('Kubernetes Deploy') {
             steps {
                 echo 'Deploying to Kubernetes...'
-                kubernetesDeploy(
-                    configs: 'deployment.yaml,service.yaml',
-                    kubeconfigId: 'kubernetes-cred'
-                )
+                withCredentials([file(credentialsId: 'kubernetes-cred', variable: 'KUBECONFIG')]) {
+                    sh '''
+                    kubectl --kubeconfig=${KUBECONFIG} apply -f deployment.yaml
+                    kubectl --kubeconfig=${KUBECONFIG} apply -f service.yaml
+                    '''
+                }
             }
         }
     }
