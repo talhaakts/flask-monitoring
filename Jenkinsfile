@@ -4,7 +4,8 @@ pipeline {
         stage('git cloning') {
             steps {
                 echo 'Cloning git repo'
-                git url: 'https://github.com/hakanbayraktar/flask-monitoring.git', branch: 'main'
+                git url: 'https://github.com/hakanbayraktar/flask-monitoring.git', credentialsId: 'jenkins-github', branch: 'main'
+
             }
         }
         stage('build') {
