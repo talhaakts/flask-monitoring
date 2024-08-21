@@ -29,7 +29,7 @@ pipeline {
                 echo 'Deploying to Kubernetes...'
                 kubernetesDeploy(
                     configs: 'deployment.yaml,service.yaml',
-                    kubeconfigId: 'k8s-cluster-cred'
+                    kubeconfigId: 'kubernetes-cred'
                 )
             }
         }
