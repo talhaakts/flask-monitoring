@@ -18,12 +18,16 @@ pipeline {
             steps {
                 echo 'Pushing to Docker Hub'
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'user', passwordVariable: 'pass')]) {
-                    sh 'echo "$pass" | docker login --username "$user" --password-stdin'
-                    sh 'docker tag flask-monitoring "$user"/flask-monitoring:latest'
-                    sh 'docker push "$user"/flask-monitoring:latest'
+                    // Şifreyi stdin ile Docker'a gönderiyoruz
+                    sh '''
+                        echo "$pass" | docker login --username "$user" --password-stdin
+                        docker tag flask-monitoring "$user"/flask-monitoring:latest
+                        docker push "$user"/flask-monitoring:latest
+                    '''
                 }
             }
         }
+
 
 
 
