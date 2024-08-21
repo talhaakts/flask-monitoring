@@ -5,7 +5,7 @@ pipeline {
         stage('Git Cloning') {
             steps {
                 echo 'Cloning git repo'
-                git url: 'https://github.com/hakanbayraktar/flask-monitoring.git', credentialsId: 'jenkins-github', branch: 'main'
+                git url: 'https://github.com/hakanbayraktar/flask-monitoring.git',  branch: 'main'
             }
         }
         stage('Build Docker Image') {
@@ -26,9 +26,9 @@ pipeline {
                 }
             }
         }
-        stage('Integrate Remote k8s with Jenkins') {
+        stage('Integrate Remote kubernetess with Jenkins') {
             steps {
-                withCredentials([string(credentialsId: 'secret_token', variable: 'KUBE_TOKEN')]) {
+                withCredentials([string(credentialsId: 'SECRET_TOKEN', variable: 'KUBE_TOKEN')]) {
                     sh '''
                     curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"
                     chmod u+x ./kubectl
