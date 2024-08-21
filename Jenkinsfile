@@ -38,6 +38,8 @@ pipeline {
                     ./kubectl config set-context default --cluster=do-fra1-ibb-tech --user=jenkins --namespace=default
                     ./kubectl config use-context default
                     ./kubectl get nodes
+                    ./kubectl apply -f service.yaml
+                    ./kubectl apply -f deployment.yaml
                     '''
                 }
             }
