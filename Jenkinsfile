@@ -18,12 +18,13 @@ pipeline {
             steps {
                 echo 'Pushing to Docker Hub'
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'user', passwordVariable: 'pass')]) {
-                    sh 'docker login -u ${env.user} -p ${env.pass}'
-                    sh 'docker tag flask-monitoring ${env.user}/flask-monitoring:latest'
-                    sh 'docker push ${env.user}/flask-monitoring:latest'
+                    sh 'docker login --username "$user" --password "$pass"'
+                    sh 'docker tag flask-monitoring "$user"/flask-monitoring:latest'
+                    sh 'docker push "$user"/flask-monitoring:latest'
                 }
             }
         }
+
         stage('kubernetes deploy') {
             steps {
                 echo 'Deploying to Kubernetes...'
