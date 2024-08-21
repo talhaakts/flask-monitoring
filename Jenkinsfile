@@ -26,16 +26,17 @@ pipeline {
                 }
             }
         }
-        stage('Kubernetes Deploy') {
+        stages {
+            stage('Integrate Remote k8s with Jenkins ') {
             steps {
-                echo 'Deploying to Kubernetes...'
-                withCredentials([file(credentialsId: 'kubernetes-cred', variable: 'KUBECONFIG')]) {
-                    sh '''
-                    kubectl --kubeconfig=${KUBECONFIG} apply -f deployment.yaml
-                    kubectl --kubeconfig=${KUBECONFIG} apply -f service.yaml
-                    '''
-                }
-            }
+                
+                withKubeCredentials(kubectlCredentials: [[caCertificate: '', clusterName: 'do-fra1-ibb-tech', contextName: '', credentialsId: 'secret_token', namespace: 'default', serverUrl: 'https://db25c80a-3584-4759-9e48-baa6c16374a8.k8s.ondigitalocean.com']]) {
+                sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'  
+                sh 'chmod u+x ./kubectl'  
+                sh './kubectl get nodes'
         }
+            }
+    }
+  }
     }
 }
