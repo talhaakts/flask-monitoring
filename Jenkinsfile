@@ -35,7 +35,7 @@ pipeline {
                     export KUBECONFIG=$(mktemp)
                     ./kubectl config set-cluster do-fra1-argocd --server=https://85a67b80-af88-4186-975e-f43098efa0d4.k8s.ondigitalocean.com --insecure-skip-tls-verify=true
                     ./kubectl config set-credentials jenkins --token=${KUBE_TOKEN}
-                    ./kubectl config set-context default --cluster=do-fra1-ibb-tech --user=jenkins --namespace=default
+                    ./kubectl config set-context default --cluster=do-fra1-argocd --user=jenkins --namespace=default
                     ./kubectl config use-context default
                     ./kubectl get nodes
                     ./kubectl apply -f service.yaml
