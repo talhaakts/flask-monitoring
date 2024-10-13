@@ -26,6 +26,11 @@ pipeline {
                 }
             }
         }
+        stage('Trivy Scan') {
+            steps {
+                 sh 'trivy image talhaakts/flask-monitoring-app:latest'
+                  }
+        }
         stage('Integrate Remote kubernetess with Jenkins') {
             steps {
                 withCredentials([string(credentialsId: 'secret-token', variable: 'KUBE_TOKEN')]) {
