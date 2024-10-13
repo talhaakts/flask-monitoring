@@ -40,7 +40,7 @@ pipeline {
                     export KUBECONFIG=$(mktemp)
                     ./kubectl config set-cluster do-nyc1-k8s-jenkins --server=https://7f55308d-0e33-4797-ad05-2fc0e401c582.k8s.ondigitalocean.com --insecure-skip-tls-verify=true
                     ./kubectl config set-credentials jenkins --token=${KUBE_TOKEN}
-                    ./kubectl config set-context default --cluster= do-nyc1-k8s-jenkins --user=jenkins --namespace=default
+                    ./kubectl config set-context default --cluster=do-nyc1-k8s-jenkins --user=jenkins --namespace=default
                     ./kubectl config use-context default
                     ./kubectl get nodes
                     ./kubectl apply -f service.yaml
